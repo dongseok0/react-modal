@@ -115,7 +115,7 @@ export default class ModalPortal extends Component {
     this.content = content;
   };
 
-  beforeOpen() {
+  afterOpen() {
     const { appElement, ariaHideApp, bodyOpenClassName } = this.props;
     // Add body class
     bodyClassList.add(bodyOpenClassName);
@@ -147,7 +147,6 @@ export default class ModalPortal extends Component {
   };
 
   open = () => {
-    this.beforeOpen();
     if (this.state.afterOpen && this.state.beforeClose) {
       clearTimeout(this.closeTimer);
       this.setState({ beforeClose: false });
@@ -160,8 +159,11 @@ export default class ModalPortal extends Component {
       this.setState({ isOpen: true }, () => {
         this.setState({ afterOpen: true });
 
-        if (this.props.isOpen && this.props.onAfterOpen) {
-          this.props.onAfterOpen();
+        if (this.props.isOpen) {
+          this.afterOpen();
+          if (this.props.onAfterOpen) {
+            this.props.onAfterOpen();
+          }
         }
       });
     }
